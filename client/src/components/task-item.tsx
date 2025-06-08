@@ -75,8 +75,8 @@ export function TaskItem({ task, index }: TaskItemProps) {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`bg-white rounded-lg p-3 shadow-sm hover:shadow-trello-hover transition-shadow cursor-pointer group ${
-            snapshot.isDragging ? 'shadow-trello-hover rotate-2' : ''
+          className={`bg-white rounded-xl p-4 shadow-zen-soft hover:shadow-zen transition-zen cursor-pointer group border border-zen-stone/10 ${
+            snapshot.isDragging ? 'shadow-zen-hover rotate-1' : ''
           }`}
         >
           <div className="flex items-start space-x-3">
@@ -84,10 +84,10 @@ export function TaskItem({ task, index }: TaskItemProps) {
               variant="ghost"
               size="icon"
               onClick={handleToggleComplete}
-              className={`mt-0.5 w-4 h-4 border-2 rounded hover:border-trello-blue transition-colors ${
+              className={`mt-0.5 w-5 h-5 border-2 rounded-lg hover:border-zen-accent transition-zen ${
                 task.completed 
-                  ? 'bg-trello-success border-trello-success' 
-                  : 'border-gray-300'
+                  ? 'bg-zen-accent border-zen-accent' 
+                  : 'border-zen-stone'
               }`}
             >
               {task.completed && <Check className="w-3 h-3 text-white" />}
@@ -108,15 +108,15 @@ export function TaskItem({ task, index }: TaskItemProps) {
                       setIsEditingName(false);
                     }
                   }}
-                  className="text-sm bg-transparent border-none outline-none w-full text-trello-dark"
+                  className="text-sm bg-transparent border-none outline-none w-full text-zen"
                   autoFocus
                 />
               ) : (
                 <p 
-                  className={`text-sm cursor-pointer ${
+                  className={`text-sm cursor-pointer transition-zen ${
                     task.completed 
-                      ? 'text-trello-muted line-through' 
-                      : 'text-trello-dark hover:text-trello-blue'
+                      ? 'text-zen-soft line-through' 
+                      : 'text-zen hover:text-zen-sage'
                   }`}
                   onClick={() => setIsEditingName(true)}
                 >
@@ -161,7 +161,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
                             });
                             setIsDatePickerOpen(false);
                           }}
-                          className="w-full text-xs text-trello-muted hover:text-trello-dark mt-2"
+                          className="w-full text-xs text-zen-soft hover:text-zen mt-2 transition-zen"
                         >
                           Remove due date
                         </Button>
@@ -171,7 +171,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
                 ) : (
                   <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                     <PopoverTrigger asChild>
-                      <button className="flex items-center text-xs text-trello-muted hover:text-trello-dark hover:bg-gray-100 rounded px-1 py-0.5">
+                      <button className="flex items-center text-xs text-zen-soft hover:text-zen hover:bg-zen-stone-light rounded-lg px-2 py-1 transition-zen">
                         <Calendar className="w-3 h-3 mr-1" />
                         <span>Add due date</span>
                       </button>

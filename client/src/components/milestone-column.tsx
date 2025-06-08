@@ -71,22 +71,22 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   };
 
   return (
-    <div className="bg-trello-light rounded-lg p-3">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
+    <div className="bg-zen-lavender-light rounded-xl p-4 shadow-zen-soft transition-zen hover:shadow-zen border border-zen-stone/20">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-3">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex items-center space-x-1 hover:bg-gray-100 rounded px-1 py-0.5"
+            className="flex items-center space-x-1 hover:bg-zen-stone-light rounded-lg px-2 py-1 transition-zen"
           >
             {isCollapsed ? (
-              <ChevronRight className="w-4 h-4 text-trello-muted" />
+              <ChevronRight className="w-4 h-4 text-zen-soft" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-trello-muted" />
+              <ChevronDown className="w-4 h-4 text-zen-soft" />
             )}
           </button>
-          <h3 className="font-medium text-trello-dark text-sm">{milestone.name}</h3>
+          <h3 className="font-medium text-zen text-base tracking-wide">{milestone.name}</h3>
           {milestone.tasks.length > 0 && (
-            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-zen-accent-soft text-zen px-3 py-1 rounded-full font-medium">
               {milestone.tasks.length}
             </span>
           )}
@@ -155,16 +155,16 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="w-6 h-6 text-trello-muted hover:text-trello-dark"
+              className="w-8 h-8 text-zen-soft hover:text-zen hover:bg-zen-stone-light transition-zen"
               onClick={() => setIsAddingTask(true)}
             >
-              <Plus className="w-3 h-3" />
+              <Plus className="w-4 h-4" />
             </Button>
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="w-6 h-6 text-trello-muted hover:text-trello-dark">
-                <MoreHorizontal className="w-3 h-3" />
+              <Button variant="ghost" size="icon" className="w-8 h-8 text-zen-soft hover:text-zen hover:bg-zen-stone-light transition-zen">
+                <MoreHorizontal className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

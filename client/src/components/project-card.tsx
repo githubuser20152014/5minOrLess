@@ -180,16 +180,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </Popover>
         )}
         
-        <div className="flex items-center justify-between text-xs text-trello-muted">
+        <div className="flex items-center justify-between text-sm text-zen-soft">
           <span>{project.milestones.length} Milestones • {totalTasks} Tasks</span>
           <div className="flex items-center">
-            <div className="w-16 bg-gray-200 rounded-full h-1.5 mr-2">
+            <div className="w-20 bg-zen-stone-light rounded-full h-2 mr-3">
               <div 
-                className="bg-trello-success h-1.5 rounded-full transition-all duration-300" 
+                className="bg-zen-accent h-2 rounded-full transition-zen" 
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
-            <span>{completedTasks}/{totalTasks}</span>
+            <span className="text-zen">{completedTasks}/{totalTasks}</span>
           </div>
         </div>
       </div>
