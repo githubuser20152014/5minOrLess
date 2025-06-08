@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Plus, Calendar, MoreHorizontal, Trash2 } from "lucide-react";
+import { Plus, Calendar, MoreHorizontal, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import type { MilestoneWithTasks } from "@shared/schema";
 import { TaskItem } from "./task-item";
 import { useState } from "react";
@@ -19,6 +19,7 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Collapsed by default
   const createTaskMutation = useCreateTask();
   const updateMilestoneMutation = useUpdateMilestone();
   const deleteMilestoneMutation = useDeleteMilestone();
@@ -72,7 +73,24 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   return (
     <div className="bg-trello-light rounded-lg p-3">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-medium text-trello-dark text-sm">{milestone.name}</h3>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="flex items-center space-x-1 hover:bg-gray-100 rounded px-1 py-0.5"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4 text-trello-muted" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-trello-muted" />
+            )}
+          </button>
+          <h3 className="font-medium text-trello-dark text-sm">{milestone.name}</h3>
+          {milestone.tasks.length > 0 && (
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
+              {milestone.tasks.length}
+            </span>
+          )}
+        </div>
         <div className="flex items-center space-x-2">
           {milestone.dueDate ? (
             <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
@@ -133,14 +151,16 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
               </PopoverContent>
             </Popover>
           )}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="w-6 h-6 text-trello-muted hover:text-trello-dark"
-            onClick={() => setIsAddingTask(true)}
-          >
-            <Plus className="w-3 h-3" />
-          </Button>
+          {!isCollapsed && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="w-6 h-6 text-trello-muted hover:text-trello-dark"
+              onClick={() => setIsAddingTask(true)}
+            >
+              <Plus className="w-3 h-3" />
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="w-6 h-6 text-trello-muted hover:text-trello-dark">
@@ -178,56 +198,60 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
         </div>
       </div>
       
-      <Droppable droppableId={milestone.id}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className={`space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-50 rounded-md p-1' : ''}`}
-          >
-            {milestone.tasks.map((task, index) => (
-              <TaskItem key={task.id} task={task} index={index} />
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+      {!isCollapsed && (
+        <>
+          <Droppable droppableId={milestone.id}>
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={`space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-50 rounded-md p-1' : ''}`}
+              >
+                {milestone.tasks.map((task, index) => (
+                  <TaskItem key={task.id} task={task} index={index} />
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
 
-      {/* Add Task */}
-      {isAddingTask ? (
-        <div className="bg-white rounded-lg p-3 mt-2 shadow-sm">
-          <input
-            type="text"
-            value={newTaskName}
-            onChange={(e) => setNewTaskName(e.target.value)}
-            placeholder="Enter task name..."
-            className="w-full text-sm text-trello-dark bg-transparent border-none outline-none"
-            autoFocus
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleAddTask();
-              } else if (e.key === "Escape") {
-                setIsAddingTask(false);
-                setNewTaskName("");
-              }
-            }}
-            onBlur={() => {
-              if (newTaskName.trim()) {
-                handleAddTask();
-              } else {
-                setIsAddingTask(false);
-              }
-            }}
-          />
-        </div>
-      ) : (
-        <button
-          onClick={() => setIsAddingTask(true)}
-          className="w-full text-left text-sm text-trello-muted hover:text-trello-dark hover:bg-white rounded-lg p-2 transition-colors mt-2"
-        >
-          <Plus className="w-4 h-4 mr-2 inline" />
-          Add a task
-        </button>
+          {/* Add Task */}
+          {isAddingTask ? (
+            <div className="bg-white rounded-lg p-3 mt-2 shadow-sm">
+              <input
+                type="text"
+                value={newTaskName}
+                onChange={(e) => setNewTaskName(e.target.value)}
+                placeholder="Enter task name..."
+                className="w-full text-sm text-trello-dark bg-transparent border-none outline-none"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddTask();
+                  } else if (e.key === "Escape") {
+                    setIsAddingTask(false);
+                    setNewTaskName("");
+                  }
+                }}
+                onBlur={() => {
+                  if (newTaskName.trim()) {
+                    handleAddTask();
+                  } else {
+                    setIsAddingTask(false);
+                  }
+                }}
+              />
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsAddingTask(true)}
+              className="w-full text-left text-sm text-trello-muted hover:text-trello-dark hover:bg-white rounded-lg p-2 transition-colors mt-2"
+            >
+              <Plus className="w-4 h-4 mr-2 inline" />
+              Add a task
+            </button>
+          )}
+        </>
       )}
     </div>
   );
