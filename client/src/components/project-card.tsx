@@ -248,6 +248,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </DropdownMenu>
         </div>
         
+        {project.details && (
+          <p className="text-sm text-zen-soft mb-3 leading-relaxed bg-zen-stone-light/30 p-3 rounded-lg border border-zen-stone/20">
+            {project.details}
+          </p>
+        )}
+        
         {project.dueDate ? (
           <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
             <PopoverTrigger asChild>

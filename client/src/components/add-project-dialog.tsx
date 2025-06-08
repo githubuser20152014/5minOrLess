@@ -90,6 +90,17 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
               required
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="details">Details (Optional)</Label>
+            <Textarea
+              id="details"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              placeholder="Add project description or notes..."
+              className="min-h-[80px] resize-none"
+            />
+          </div>
           
           <div className="space-y-2">
             <Label>Due Date (Optional)</Label>
