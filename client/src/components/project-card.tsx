@@ -4,11 +4,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Calendar, MoreHorizontal, Plus, Trash2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar, MoreHorizontal, Plus, Trash2, Copy } from "lucide-react";
 import type { ProjectWithMilestones } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
 import { useState } from "react";
-import { useCreateMilestone, useUpdateProject, useDeleteProject } from "@/hooks/use-projects";
+import { useCreateMilestone, useUpdateProject, useDeleteProject, useCreateProject } from "@/hooks/use-projects";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { format } from "date-fns";
 
@@ -22,9 +25,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isEditingProjectName, setIsEditingProjectName] = useState(false);
   const [editedProjectName, setEditedProjectName] = useState(project.name);
+  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
+  const [duplicateProjectName, setDuplicateProjectName] = useState(`${project.name} (Copy)`);
   const createMilestoneMutation = useCreateMilestone();
   const updateProjectMutation = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
+  const createProjectMutation = useCreateProject();
 
   const totalTasks = project.milestones.reduce((sum, milestone) => sum + milestone.tasks.length, 0);
   const completedTasks = project.milestones.reduce(
@@ -58,6 +64,24 @@ export function ProjectCard({ project }: ProjectCardProps) {
     }
     setEditedProjectName(project.name);
     setIsEditingProjectName(false);
+  };
+
+  const handleDuplicateProject = async () => {
+    if (duplicateProjectName.trim()) {
+      try {
+        // Create the new project first
+        const newProject = await createProjectMutation.mutateAsync({
+          name: duplicateProjectName.trim(),
+          dueDate: project.dueDate,
+        });
+
+        // Close dialog
+        setIsDuplicateDialogOpen(false);
+        setDuplicateProjectName(`${project.name} (Copy)`);
+      } catch (error) {
+        console.error("Failed to duplicate project:", error);
+      }
+    }
   };
 
   const handleProjectDateSelect = (date: Date | undefined) => {
@@ -127,6 +151,52 @@ export function ProjectCard({ project }: ProjectCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <Dialog open={isDuplicateDialogOpen} onOpenChange={setIsDuplicateDialogOpen}>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-zen hover:text-zen-sage hover:bg-zen-stone-light">
+                    <Copy className="w-4 h-4 mr-2" />
+                    Duplicate Project
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="text-zen">Duplicate Project</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="project-name" className="text-zen-soft">Project Name</Label>
+                      <Input
+                        id="project-name"
+                        value={duplicateProjectName}
+                        onChange={(e) => setDuplicateProjectName(e.target.value)}
+                        placeholder="Enter new project name..."
+                        className="border-zen-stone focus:border-zen-accent"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleDuplicateProject();
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setIsDuplicateDialogOpen(false)}
+                        className="border-zen-stone text-zen-soft hover:text-zen"
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        onClick={handleDuplicateProject}
+                        className="bg-zen-accent-soft hover:bg-zen-accent text-zen"
+                        disabled={!duplicateProjectName.trim() || createProjectMutation.isPending}
+                      >
+                        {createProjectMutation.isPending ? "Creating..." : "Duplicate"}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 hover:text-red-700 hover:bg-red-50">
