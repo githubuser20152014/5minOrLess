@@ -2,11 +2,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Calendar, MoreHorizontal, Plus } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Calendar, MoreHorizontal, Plus, Trash2 } from "lucide-react";
 import type { ProjectWithMilestones } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
 import { useState } from "react";
-import { useCreateMilestone, useUpdateProject } from "@/hooks/use-projects";
+import { useCreateMilestone, useUpdateProject, useDeleteProject } from "@/hooks/use-projects";
 import { format } from "date-fns";
 
 interface ProjectCardProps {
@@ -19,6 +21,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const createMilestoneMutation = useCreateMilestone();
   const updateProjectMutation = useUpdateProject();
+  const deleteProjectMutation = useDeleteProject();
 
   const totalTasks = project.milestones.reduce((sum, milestone) => sum + milestone.tasks.length, 0);
   const completedTasks = project.milestones.reduce(
@@ -77,9 +80,40 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className="p-4 border-b border-trello-border">
         <div className="flex items-start justify-between mb-2">
           <h2 className="text-lg font-semibold text-trello-dark">{project.name}</h2>
-          <Button variant="ghost" size="icon" className="text-trello-muted hover:text-trello-dark">
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-trello-muted hover:text-trello-dark">
+                <MoreHorizontal className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Project
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Project</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete "{project.name}"? This will permanently delete the project and all its milestones and tasks. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => deleteProjectMutation.mutate(project.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Delete Project
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         
         {project.dueDate ? (

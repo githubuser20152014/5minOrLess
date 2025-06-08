@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Plus, Calendar, MoreHorizontal } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Plus, Calendar, MoreHorizontal, Trash2 } from "lucide-react";
 import type { MilestoneWithTasks } from "@shared/schema";
 import { TaskItem } from "./task-item";
 import { useState } from "react";
-import { useCreateTask, useUpdateMilestone } from "@/hooks/use-projects";
+import { useCreateTask, useUpdateMilestone, useDeleteMilestone } from "@/hooks/use-projects";
 import { Droppable } from "react-beautiful-dnd";
 import { format } from "date-fns";
 
@@ -19,6 +21,7 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const createTaskMutation = useCreateTask();
   const updateMilestoneMutation = useUpdateMilestone();
+  const deleteMilestoneMutation = useDeleteMilestone();
 
   const handleAddTask = async () => {
     if (newTaskName.trim()) {
