@@ -34,6 +34,166 @@ export class MemStorage implements IStorage {
     this.milestones = new Map();
     this.tasks = new Map();
     this.currentId = 1;
+    
+    // Add some sample data
+    this.initializeSampleData();
+  }
+
+  private initializeSampleData() {
+    // Create sample projects
+    const project1: Project = {
+      id: "project_1",
+      name: "Website Redesign",
+      dueDate: "2024-12-31",
+      createdAt: new Date("2024-01-01"),
+    };
+
+    const project2: Project = {
+      id: "project_2", 
+      name: "Mobile App Development",
+      dueDate: "2024-11-15",
+      createdAt: new Date("2024-01-15"),
+    };
+
+    this.projects.set(project1.id, project1);
+    this.projects.set(project2.id, project2);
+
+    // Create sample milestones for project 1
+    const milestone1: Milestone = {
+      id: "milestone_1",
+      projectId: "project_1",
+      name: "Planning",
+      dueDate: "2024-06-30",
+      order: 0,
+      createdAt: new Date("2024-01-02"),
+    };
+
+    const milestone2: Milestone = {
+      id: "milestone_2",
+      projectId: "project_1", 
+      name: "Design",
+      dueDate: "2024-09-30",
+      order: 1,
+      createdAt: new Date("2024-01-03"),
+    };
+
+    const milestone3: Milestone = {
+      id: "milestone_3",
+      projectId: "project_1",
+      name: "Development",
+      order: 2,
+      createdAt: new Date("2024-01-04"),
+    };
+
+    // Create sample milestones for project 2
+    const milestone4: Milestone = {
+      id: "milestone_4",
+      projectId: "project_2",
+      name: "Research & Planning",
+      dueDate: "2024-07-15",
+      order: 0,
+      createdAt: new Date("2024-01-16"),
+    };
+
+    const milestone5: Milestone = {
+      id: "milestone_5",
+      projectId: "project_2",
+      name: "MVP Development",
+      order: 1,
+      createdAt: new Date("2024-01-17"),
+    };
+
+    this.milestones.set(milestone1.id, milestone1);
+    this.milestones.set(milestone2.id, milestone2);
+    this.milestones.set(milestone3.id, milestone3);
+    this.milestones.set(milestone4.id, milestone4);
+    this.milestones.set(milestone5.id, milestone5);
+
+    // Create sample tasks
+    const tasks: Task[] = [
+      {
+        id: "task_1",
+        milestoneId: "milestone_1",
+        name: "Define project requirements",
+        completed: true,
+        dueDate: "2024-06-15",
+        order: 0,
+        createdAt: new Date("2024-01-05"),
+      },
+      {
+        id: "task_2", 
+        milestoneId: "milestone_1",
+        name: "Create project timeline",
+        completed: true,
+        order: 1,
+        createdAt: new Date("2024-01-06"),
+      },
+      {
+        id: "task_3",
+        milestoneId: "milestone_1",
+        name: "Stakeholder approval",
+        completed: false,
+        dueDate: "2024-06-25",
+        order: 2,
+        createdAt: new Date("2024-01-07"),
+      },
+      {
+        id: "task_4",
+        milestoneId: "milestone_2",
+        name: "Create wireframes",
+        completed: false,
+        dueDate: "2024-07-15",
+        order: 0,
+        createdAt: new Date("2024-01-08"),
+      },
+      {
+        id: "task_5",
+        milestoneId: "milestone_2",
+        name: "Design mockups",
+        completed: false,
+        order: 1,
+        createdAt: new Date("2024-01-09"),
+      },
+      {
+        id: "task_6",
+        milestoneId: "milestone_3",
+        name: "Set up development environment",
+        completed: false,
+        order: 0,
+        createdAt: new Date("2024-01-10"),
+      },
+      {
+        id: "task_7",
+        milestoneId: "milestone_4",
+        name: "Market research",
+        completed: true,
+        order: 0,
+        createdAt: new Date("2024-01-18"),
+      },
+      {
+        id: "task_8",
+        milestoneId: "milestone_4",
+        name: "User persona development",
+        completed: false,
+        dueDate: "2024-07-10",
+        order: 1,
+        createdAt: new Date("2024-01-19"),
+      },
+      {
+        id: "task_9",
+        milestoneId: "milestone_5",
+        name: "Create app architecture",
+        completed: false,
+        order: 0,
+        createdAt: new Date("2024-01-20"),
+      },
+    ];
+
+    tasks.forEach(task => {
+      this.tasks.set(task.id, task);
+    });
+
+    this.currentId = 10; // Set current ID to avoid conflicts
   }
 
   private generateId(): string {
