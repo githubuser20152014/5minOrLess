@@ -47,6 +47,7 @@ export class MemStorage implements IStorage {
       id: "project_1",
       name: "Website Redesign",
       dueDate: "2024-12-31",
+      order: 0,
       createdAt: new Date("2024-01-01"),
     };
 
@@ -54,6 +55,7 @@ export class MemStorage implements IStorage {
       id: "project_2", 
       name: "Mobile App Development",
       dueDate: "2024-11-15",
+      order: 1,
       createdAt: new Date("2024-01-15"),
     };
 
@@ -192,6 +194,7 @@ export class MemStorage implements IStorage {
         milestoneId: "milestone_5",
         name: "Create app architecture",
         completed: false,
+        dueDate: null,
         order: 0,
         createdAt: new Date("2024-01-20"),
       },
@@ -239,6 +242,7 @@ export class MemStorage implements IStorage {
     const project: Project = {
       ...insertProject,
       id,
+      dueDate: insertProject.dueDate || null,
       createdAt: new Date(),
     };
     this.projects.set(id, project);
@@ -285,6 +289,8 @@ export class MemStorage implements IStorage {
     const milestone: Milestone = {
       ...insertMilestone,
       id,
+      dueDate: insertMilestone.dueDate || null,
+      order: insertMilestone.order || 0,
       createdAt: new Date(),
     };
     this.milestones.set(id, milestone);
@@ -320,6 +326,9 @@ export class MemStorage implements IStorage {
     const task: Task = {
       ...insertTask,
       id,
+      dueDate: insertTask.dueDate || null,
+      order: insertTask.order || 0,
+      completed: insertTask.completed || false,
       createdAt: new Date(),
     };
     this.tasks.set(id, task);

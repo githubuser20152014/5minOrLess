@@ -41,7 +41,6 @@ export function TaskItem({ task, index }: TaskItemProps) {
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    console.log('Date selected:', date);
     let formattedDate = null;
     if (date) {
       // Format the selected date as YYYY-MM-DD in local timezone
@@ -49,7 +48,6 @@ export function TaskItem({ task, index }: TaskItemProps) {
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       formattedDate = `${year}-${month}-${day}`;
-      console.log('Formatted date:', formattedDate);
     }
     updateTaskMutation.mutate({
       id: task.id,

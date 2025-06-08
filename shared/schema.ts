@@ -6,6 +6,7 @@ export const projects = pgTable("projects", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   dueDate: text("due_date"),
+  order: integer("order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
