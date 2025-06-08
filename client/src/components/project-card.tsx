@@ -1,10 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Calendar, MoreHorizontal, Plus } from "lucide-react";
 import type { ProjectWithMilestones } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
 import { useState } from "react";
-import { useCreateMilestone } from "@/hooks/use-projects";
+import { useCreateMilestone, useUpdateProject } from "@/hooks/use-projects";
+import { format } from "date-fns";
 
 interface ProjectCardProps {
   project: ProjectWithMilestones;
@@ -13,7 +16,9 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const [isAddingMilestone, setIsAddingMilestone] = useState(false);
   const [newMilestoneName, setNewMilestoneName] = useState("");
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const createMilestoneMutation = useCreateMilestone();
+  const updateProjectMutation = useUpdateProject();
 
   const totalTasks = project.milestones.reduce((sum, milestone) => sum + milestone.tasks.length, 0);
   const completedTasks = project.milestones.reduce(

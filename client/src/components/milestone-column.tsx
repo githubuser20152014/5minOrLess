@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Plus, Calendar, MoreHorizontal } from "lucide-react";
 import type { MilestoneWithTasks } from "@shared/schema";
 import { TaskItem } from "./task-item";
 import { useState } from "react";
-import { useCreateTask } from "@/hooks/use-projects";
+import { useCreateTask, useUpdateMilestone } from "@/hooks/use-projects";
 import { Droppable } from "react-beautiful-dnd";
+import { format } from "date-fns";
 
 interface MilestoneColumnProps {
   milestone: MilestoneWithTasks;
@@ -13,7 +16,9 @@ interface MilestoneColumnProps {
 export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskName, setNewTaskName] = useState("");
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const createTaskMutation = useCreateTask();
+  const updateMilestoneMutation = useUpdateMilestone();
 
   const handleAddTask = async () => {
     if (newTaskName.trim()) {
@@ -29,6 +34,14 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
         console.error("Failed to create task:", error);
       }
     }
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    updateMilestoneMutation.mutate({
+      id: milestone.id,
+      dueDate: date?.toISOString().split('T')[0] || null,
+    });
+    setIsDatePickerOpen(false);
   };
 
   const getDueDateColor = (dueDate?: string) => {
@@ -49,10 +62,49 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-medium text-trello-dark text-sm">{milestone.name}</h3>
         <div className="flex items-center space-x-2">
-          {milestone.dueDate && (
-            <span className={`text-xs px-2 py-1 rounded ${getDueDateColor(milestone.dueDate)}`}>
-              Due: {new Date(milestone.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-            </span>
+          {milestone.dueDate ? (
+            <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <button className={`text-xs px-2 py-1 rounded hover:bg-gray-100 ${getDueDateColor(milestone.dueDate)}`}>
+                  Due: {new Date(milestone.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={milestone.dueDate ? new Date(milestone.dueDate) : undefined}
+                  onSelect={handleDateSelect}
+                  initialFocus
+                />
+                <div className="p-3 border-t">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDateSelect(undefined)}
+                    className="w-full text-xs text-trello-muted hover:text-trello-dark"
+                  >
+                    Remove due date
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <button className="text-xs text-trello-muted hover:text-trello-dark hover:bg-gray-100 rounded px-2 py-1">
+                  <Calendar className="w-3 h-3 mr-1 inline" />
+                  Add due date
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={undefined}
+                  onSelect={handleDateSelect}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           )}
           <Button 
             variant="ghost" 
