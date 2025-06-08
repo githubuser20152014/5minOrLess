@@ -11,7 +11,7 @@ import { Calendar, MoreHorizontal, Plus, Trash2, Copy } from "lucide-react";
 import type { ProjectWithMilestones } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
 import { useState } from "react";
-import { useCreateMilestone, useUpdateProject, useDeleteProject, useCreateProject } from "@/hooks/use-projects";
+import { useCreateMilestone, useUpdateProject, useDeleteProject, useCreateProject, useCreateTask } from "@/hooks/use-projects";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { format } from "date-fns";
 
@@ -31,6 +31,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const updateProjectMutation = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
   const createProjectMutation = useCreateProject();
+  const createTaskMutation = useCreateTask();
 
   const totalTasks = project.milestones.reduce((sum, milestone) => sum + milestone.tasks.length, 0);
   const completedTasks = project.milestones.reduce(
@@ -74,6 +75,27 @@ export function ProjectCard({ project }: ProjectCardProps) {
           name: duplicateProjectName.trim(),
           dueDate: project.dueDate,
         });
+
+        // Duplicate all milestones and their tasks
+        for (const milestone of project.milestones) {
+          const newMilestone = await createMilestoneMutation.mutateAsync({
+            projectId: newProject.id,
+            name: milestone.name,
+            dueDate: milestone.dueDate,
+            order: milestone.order,
+          });
+
+          // Duplicate all tasks in this milestone
+          for (const task of milestone.tasks) {
+            await createTaskMutation.mutateAsync({
+              milestoneId: newMilestone.id,
+              name: task.name,
+              completed: false, // Reset completion status for new project
+              dueDate: task.dueDate,
+              order: task.order,
+            });
+          }
+        }
 
         // Close dialog
         setIsDuplicateDialogOpen(false);
