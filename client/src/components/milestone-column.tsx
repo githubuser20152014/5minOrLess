@@ -235,12 +235,6 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
         </div>
       </div>
       
-      {milestone.details && !isCollapsed && (
-        <p className="text-xs text-zen-soft mb-3 leading-relaxed bg-zen-stone-light/20 p-2 rounded border border-zen-stone/10">
-          {milestone.details}
-        </p>
-      )}
-      
       {!isCollapsed && (
         <>
           <Droppable droppableId={milestone.id}>

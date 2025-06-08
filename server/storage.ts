@@ -46,7 +46,6 @@ export class MemStorage implements IStorage {
     const project1: Project = {
       id: "project_1",
       name: "Website Redesign",
-      details: "Complete overhaul of company website with modern design and improved UX",
       dueDate: "2024-12-31",
       order: 0,
       createdAt: new Date("2024-01-01"),
@@ -55,7 +54,6 @@ export class MemStorage implements IStorage {
     const project2: Project = {
       id: "project_2", 
       name: "Mobile App Development",
-      details: "Native mobile application for iOS and Android platforms",
       dueDate: "2024-11-15",
       order: 1,
       createdAt: new Date("2024-01-15"),
@@ -69,7 +67,6 @@ export class MemStorage implements IStorage {
       id: "milestone_1",
       projectId: "project_1",
       name: "Planning",
-      details: "Initial project planning and requirements gathering phase",
       dueDate: "2024-06-30",
       order: 0,
       createdAt: new Date("2024-01-02"),
@@ -79,7 +76,6 @@ export class MemStorage implements IStorage {
       id: "milestone_2",
       projectId: "project_1", 
       name: "Design",
-      details: "UI/UX design and wireframe creation",
       dueDate: "2024-09-30",
       order: 1,
       createdAt: new Date("2024-01-03"),
@@ -89,7 +85,6 @@ export class MemStorage implements IStorage {
       id: "milestone_3",
       projectId: "project_1",
       name: "Development",
-      details: "Frontend and backend implementation",
       dueDate: null,
       order: 2,
       createdAt: new Date("2024-01-04"),
@@ -100,7 +95,6 @@ export class MemStorage implements IStorage {
       id: "milestone_4",
       projectId: "project_2",
       name: "Research & Planning",
-      details: "Market research and technical planning for mobile app",
       dueDate: "2024-07-15",
       order: 0,
       createdAt: new Date("2024-01-16"),
@@ -110,7 +104,6 @@ export class MemStorage implements IStorage {
       id: "milestone_5",
       projectId: "project_2",
       name: "MVP Development",
-      details: "Core features development for minimum viable product",
       dueDate: null,
       order: 1,
       createdAt: new Date("2024-01-17"),
@@ -128,7 +121,6 @@ export class MemStorage implements IStorage {
         id: "task_1",
         milestoneId: "milestone_1",
         name: "Define project requirements",
-        details: "Gather and document all functional and non-functional requirements",
         completed: true,
         dueDate: "2024-06-15",
         order: 0,
@@ -138,7 +130,6 @@ export class MemStorage implements IStorage {
         id: "task_2", 
         milestoneId: "milestone_1",
         name: "Create project timeline",
-        details: "Develop detailed project schedule with milestones and dependencies",
         completed: true,
         dueDate: null,
         order: 1,
@@ -148,7 +139,6 @@ export class MemStorage implements IStorage {
         id: "task_3",
         milestoneId: "milestone_1",
         name: "Stakeholder approval",
-        details: "Present requirements and timeline to stakeholders for final approval",
         completed: false,
         dueDate: "2024-06-25",
         order: 2,
@@ -158,7 +148,6 @@ export class MemStorage implements IStorage {
         id: "task_4",
         milestoneId: "milestone_2",
         name: "Create wireframes",
-        details: "Design low-fidelity wireframes for all key pages and user flows",
         completed: false,
         dueDate: "2024-07-15",
         order: 0,
@@ -168,7 +157,6 @@ export class MemStorage implements IStorage {
         id: "task_5",
         milestoneId: "milestone_2",
         name: "Design mockups",
-        details: "Create high-fidelity visual designs based on approved wireframes",
         completed: false,
         dueDate: null,
         order: 1,
@@ -178,7 +166,6 @@ export class MemStorage implements IStorage {
         id: "task_6",
         milestoneId: "milestone_3",
         name: "Set up development environment",
-        details: "Configure development tools, repositories, and deployment pipeline",
         completed: false,
         dueDate: null,
         order: 0,
@@ -188,7 +175,6 @@ export class MemStorage implements IStorage {
         id: "task_7",
         milestoneId: "milestone_4",
         name: "Market research",
-        details: "Analyze competitor apps and identify market opportunities",
         completed: true,
         dueDate: null,
         order: 0,
@@ -198,7 +184,6 @@ export class MemStorage implements IStorage {
         id: "task_8",
         milestoneId: "milestone_4",
         name: "User persona development",
-        details: "Create detailed user personas based on target audience research",
         completed: false,
         dueDate: "2024-07-10",
         order: 1,
@@ -208,7 +193,6 @@ export class MemStorage implements IStorage {
         id: "task_9",
         milestoneId: "milestone_5",
         name: "Create app architecture",
-        details: "Design technical architecture and select technology stack",
         completed: false,
         dueDate: null,
         order: 0,
@@ -256,11 +240,10 @@ export class MemStorage implements IStorage {
   async createProject(insertProject: InsertProject): Promise<Project> {
     const id = this.generateId();
     const project: Project = {
+      ...insertProject,
       id,
-      name: insertProject.name,
-      details: insertProject.details ?? null,
-      dueDate: insertProject.dueDate ?? null,
-      order: insertProject.order ?? 0,
+      dueDate: insertProject.dueDate || null,
+      order: insertProject.order || 0,
       createdAt: new Date(),
     };
     this.projects.set(id, project);
@@ -305,12 +288,10 @@ export class MemStorage implements IStorage {
   async createMilestone(insertMilestone: InsertMilestone): Promise<Milestone> {
     const id = this.generateId();
     const milestone: Milestone = {
+      ...insertMilestone,
       id,
-      projectId: insertMilestone.projectId,
-      name: insertMilestone.name,
-      details: insertMilestone.details ?? null,
-      dueDate: insertMilestone.dueDate ?? null,
-      order: insertMilestone.order ?? 0,
+      dueDate: insertMilestone.dueDate || null,
+      order: insertMilestone.order || 0,
       createdAt: new Date(),
     };
     this.milestones.set(id, milestone);
@@ -344,13 +325,11 @@ export class MemStorage implements IStorage {
   async createTask(insertTask: InsertTask): Promise<Task> {
     const id = this.generateId();
     const task: Task = {
+      ...insertTask,
       id,
-      milestoneId: insertTask.milestoneId,
-      name: insertTask.name,
-      details: insertTask.details ?? null,
-      completed: insertTask.completed ?? false,
-      dueDate: insertTask.dueDate ?? null,
-      order: insertTask.order ?? 0,
+      dueDate: insertTask.dueDate || null,
+      order: insertTask.order || 0,
+      completed: insertTask.completed || false,
       createdAt: new Date(),
     };
     this.tasks.set(id, task);
