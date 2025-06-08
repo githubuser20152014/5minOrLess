@@ -43,6 +43,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
     }
   };
 
+  const handleProjectDateSelect = (date: Date | undefined) => {
+    updateProjectMutation.mutate({
+      id: project.id,
+      dueDate: date?.toISOString().split('T')[0] || null,
+    });
+    setIsDatePickerOpen(false);
+  };
+
   const getDueDateColor = (dueDate?: string) => {
     if (!dueDate) return "";
     
@@ -67,11 +75,50 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </Button>
         </div>
         
-        {project.dueDate && (
-          <div className="flex items-center text-sm text-trello-muted mb-3">
-            <Calendar className="w-3 h-3 mr-2" />
-            <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
-          </div>
+        {project.dueDate ? (
+          <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <button className={`flex items-center text-sm mb-3 hover:bg-gray-100 rounded px-2 py-1 ${getDueDateColor(project.dueDate)}`}>
+                <Calendar className="w-3 h-3 mr-2" />
+                <span>Due: {new Date(project.dueDate).toLocaleDateString()}</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={project.dueDate ? new Date(project.dueDate) : undefined}
+                onSelect={handleProjectDateSelect}
+                initialFocus
+              />
+              <div className="p-3 border-t">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleProjectDateSelect(undefined)}
+                  className="w-full text-xs text-trello-muted hover:text-trello-dark"
+                >
+                  Remove due date
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : (
+          <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+            <PopoverTrigger asChild>
+              <button className="flex items-center text-sm text-trello-muted hover:text-trello-dark hover:bg-gray-100 rounded px-2 py-1 mb-3">
+                <Calendar className="w-3 h-3 mr-2" />
+                <span>Add due date</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={undefined}
+                onSelect={handleProjectDateSelect}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         )}
         
         <div className="flex items-center justify-between text-xs text-trello-muted">
