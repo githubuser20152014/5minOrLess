@@ -124,6 +124,12 @@ export function TaskItem({ task, index }: TaskItemProps) {
                 </p>
               )}
               
+              {task.details && (
+                <p className="text-xs text-zen-soft mt-2 leading-relaxed bg-zen-stone-light/20 p-2 rounded border border-zen-stone/10">
+                  {task.details}
+                </p>
+              )}
+              
               <div className="flex items-center justify-between mt-1">
                 {task.dueDate ? (
                   <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>

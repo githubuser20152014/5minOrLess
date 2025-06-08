@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Calendar, MoreHorizontal, Plus, Trash2, Copy } from "lucide-react";
 import type { ProjectWithMilestones } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
@@ -22,6 +23,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const [isAddingMilestone, setIsAddingMilestone] = useState(false);
   const [newMilestoneName, setNewMilestoneName] = useState("");
+  const [newMilestoneDetails, setNewMilestoneDetails] = useState("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isEditingProjectName, setIsEditingProjectName] = useState(false);
   const [editedProjectName, setEditedProjectName] = useState(project.name);
