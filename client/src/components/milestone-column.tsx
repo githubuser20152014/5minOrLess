@@ -20,6 +20,8 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   const [newTaskName, setNewTaskName] = useState("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true); // Collapsed by default
+  const [isEditingMilestoneName, setIsEditingMilestoneName] = useState(false);
+  const [editedMilestoneName, setEditedMilestoneName] = useState(milestone.name);
   const createTaskMutation = useCreateTask();
   const updateMilestoneMutation = useUpdateMilestone();
   const deleteMilestoneMutation = useDeleteMilestone();
@@ -38,6 +40,17 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
         console.error("Failed to create task:", error);
       }
     }
+  };
+
+  const handleMilestoneNameEdit = () => {
+    if (editedMilestoneName.trim() && editedMilestoneName !== milestone.name) {
+      updateMilestoneMutation.mutate({
+        id: milestone.id,
+        name: editedMilestoneName.trim(),
+      });
+    }
+    setEditedMilestoneName(milestone.name);
+    setIsEditingMilestoneName(false);
   };
 
   const handleDateSelect = (date: Date | undefined) => {
@@ -84,7 +97,31 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
               <ChevronDown className="w-4 h-4 text-zen-soft" />
             )}
           </button>
-          <h3 className="font-medium text-zen text-base tracking-wide">{milestone.name}</h3>
+          {isEditingMilestoneName ? (
+            <input
+              type="text"
+              value={editedMilestoneName}
+              onChange={(e) => setEditedMilestoneName(e.target.value)}
+              onBlur={handleMilestoneNameEdit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleMilestoneNameEdit();
+                } else if (e.key === "Escape") {
+                  setEditedMilestoneName(milestone.name);
+                  setIsEditingMilestoneName(false);
+                }
+              }}
+              className="font-medium text-zen text-base tracking-wide bg-transparent border-none outline-none"
+              autoFocus
+            />
+          ) : (
+            <h3 
+              className="font-medium text-zen text-base tracking-wide cursor-pointer hover:text-zen-sage transition-zen"
+              onClick={() => setIsEditingMilestoneName(true)}
+            >
+              {milestone.name}
+            </h3>
+          )}
           {milestone.tasks.length > 0 && (
             <span className="text-xs bg-zen-accent-soft text-zen px-3 py-1 rounded-full font-medium">
               {milestone.tasks.length}

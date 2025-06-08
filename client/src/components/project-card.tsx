@@ -20,6 +20,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const [isAddingMilestone, setIsAddingMilestone] = useState(false);
   const [newMilestoneName, setNewMilestoneName] = useState("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isEditingProjectName, setIsEditingProjectName] = useState(false);
+  const [editedProjectName, setEditedProjectName] = useState(project.name);
   const createMilestoneMutation = useCreateMilestone();
   const updateProjectMutation = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
@@ -45,6 +47,17 @@ export function ProjectCard({ project }: ProjectCardProps) {
         console.error("Failed to create milestone:", error);
       }
     }
+  };
+
+  const handleProjectNameEdit = () => {
+    if (editedProjectName.trim() && editedProjectName !== project.name) {
+      updateProjectMutation.mutate({
+        id: project.id,
+        name: editedProjectName.trim(),
+      });
+    }
+    setEditedProjectName(project.name);
+    setIsEditingProjectName(false);
   };
 
   const handleProjectDateSelect = (date: Date | undefined) => {
@@ -82,7 +95,31 @@ export function ProjectCard({ project }: ProjectCardProps) {
       {/* Project Header */}
       <div className="p-6 border-b border-zen-stone">
         <div className="flex items-start justify-between mb-3">
-          <h2 className="text-xl font-light text-zen tracking-wide">{project.name}</h2>
+          {isEditingProjectName ? (
+            <input
+              type="text"
+              value={editedProjectName}
+              onChange={(e) => setEditedProjectName(e.target.value)}
+              onBlur={handleProjectNameEdit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleProjectNameEdit();
+                } else if (e.key === "Escape") {
+                  setEditedProjectName(project.name);
+                  setIsEditingProjectName(false);
+                }
+              }}
+              className="text-xl font-light text-zen tracking-wide bg-transparent border-none outline-none w-full"
+              autoFocus
+            />
+          ) : (
+            <h2 
+              className="text-xl font-light text-zen tracking-wide cursor-pointer hover:text-zen-sage transition-zen"
+              onClick={() => setIsEditingProjectName(true)}
+            >
+              {project.name}
+            </h2>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="text-zen-soft hover:text-zen transition-zen">
