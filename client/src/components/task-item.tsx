@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Check, Calendar, GripVertical, Edit2 } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Check, Calendar, GripVertical, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
 import type { Task } from "@shared/schema";
-import { useUpdateTask } from "@/hooks/use-projects";
+import { useUpdateTask, useDeleteTask } from "@/hooks/use-projects";
 import { Draggable } from "react-beautiful-dnd";
 import { format } from "date-fns";
 
@@ -18,6 +20,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
   const [editedName, setEditedName] = useState(task.name);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const updateTaskMutation = useUpdateTask();
+  const deleteTaskMutation = useDeleteTask();
 
   const handleToggleComplete = () => {
     updateTaskMutation.mutate({
@@ -168,11 +171,47 @@ export function TaskItem({ task, index }: TaskItemProps) {
               </div>
             </div>
             
-            <div
-              {...provided.dragHandleProps}
-              className="opacity-0 group-hover:opacity-100 text-trello-muted hover:text-trello-dark transition-opacity"
-            >
-              <GripVertical className="w-4 h-4" />
+            <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="w-6 h-6 text-trello-muted hover:text-trello-dark">
+                    <MoreHorizontal className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Task
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Task</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{task.name}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => deleteTaskMutation.mutate(task.id)}
+                          className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          Delete Task
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <div
+                {...provided.dragHandleProps}
+                className="text-trello-muted hover:text-trello-dark"
+              >
+                <GripVertical className="w-4 h-4" />
+              </div>
             </div>
           </div>
         </div>

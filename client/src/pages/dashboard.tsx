@@ -4,7 +4,7 @@ import { Plus, ListTodo } from "lucide-react";
 import { useProjects } from "@/hooks/use-projects";
 import { ProjectCard } from "@/components/project-card";
 import { AddProjectDialog } from "@/components/add-project-dialog";
-import { DragDropContext, Droppable, type DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable, type DropResult } from "react-beautiful-dnd";
 import { useMoveTask, useReorderTasks } from "@/hooks/use-projects";
 
 export default function Dashboard() {
