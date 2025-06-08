@@ -136,7 +136,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
                     <PopoverContent className="w-auto p-0" align="start">
                       <CalendarComponent
                         mode="single"
-                        selected={task.dueDate ? new Date(task.dueDate) : undefined}
+                        selected={task.dueDate ? new Date(task.dueDate + 'T00:00:00') : undefined}
                         onSelect={handleDateSelect}
                         initialFocus
                       />

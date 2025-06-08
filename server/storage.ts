@@ -7,12 +7,14 @@ export interface IStorage {
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: string, project: Partial<InsertProject>): Promise<Project>;
   deleteProject(id: string): Promise<void>;
+  reorderProjects(projectIds: string[]): Promise<void>;
 
   // Milestones
   getMilestones(projectId: string): Promise<MilestoneWithTasks[]>;
   createMilestone(milestone: InsertMilestone): Promise<Milestone>;
   updateMilestone(id: string, milestone: Partial<InsertMilestone>): Promise<Milestone>;
   deleteMilestone(id: string): Promise<void>;
+  reorderMilestones(projectId: string, milestoneIds: string[]): Promise<void>;
 
   // Tasks
   getTasks(milestoneId: string): Promise<Task[]>;
@@ -348,6 +350,32 @@ export class MemStorage implements IStorage {
       ...task,
       milestoneId: newMilestoneId,
       order: newOrder,
+    });
+  }
+
+  async reorderProjects(projectIds: string[]): Promise<void> {
+    // Update each project's order based on the new ordering
+    projectIds.forEach((projectId, index) => {
+      const project = this.projects.get(projectId);
+      if (project) {
+        this.projects.set(projectId, {
+          ...project,
+          order: index,
+        });
+      }
+    });
+  }
+
+  async reorderMilestones(projectId: string, milestoneIds: string[]): Promise<void> {
+    // Update each milestone's order based on the new ordering
+    milestoneIds.forEach((milestoneId, index) => {
+      const milestone = this.milestones.get(milestoneId);
+      if (milestone && milestone.projectId === projectId) {
+        this.milestones.set(milestoneId, {
+          ...milestone,
+          order: index,
+        });
+      }
     });
   }
 }

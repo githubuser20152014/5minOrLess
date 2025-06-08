@@ -84,7 +84,7 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
               <PopoverContent className="w-auto p-0" align="start">
                 <CalendarComponent
                   mode="single"
-                  selected={milestone.dueDate ? new Date(milestone.dueDate) : undefined}
+                  selected={milestone.dueDate ? new Date(milestone.dueDate + 'T00:00:00') : undefined}
                   onSelect={handleDateSelect}
                   initialFocus
                 />
