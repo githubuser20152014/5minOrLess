@@ -9,6 +9,7 @@ import type { ProjectWithMilestones } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
 import { useState } from "react";
 import { useCreateMilestone, useUpdateProject, useDeleteProject } from "@/hooks/use-projects";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import { format } from "date-fns";
 
 interface ProjectCardProps {
@@ -178,9 +179,33 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       {/* Milestones Container */}
       <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
-        {project.milestones.map((milestone) => (
-          <MilestoneColumn key={milestone.id} milestone={milestone} />
-        ))}
+        <Droppable droppableId={`milestones-${project.id}`} type="MILESTONE">
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={`space-y-4 ${
+                snapshot.isDraggingOver ? 'bg-blue-50 rounded-lg p-2' : ''
+              }`}
+            >
+              {project.milestones.map((milestone, index) => (
+                <Draggable key={milestone.id} draggableId={milestone.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`${snapshot.isDragging ? 'rotate-1 scale-105' : ''} transition-transform`}
+                    >
+                      <MilestoneColumn milestone={milestone} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
         
         {/* Add Milestone */}
         {isAddingMilestone ? (

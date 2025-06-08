@@ -108,21 +108,44 @@ export default function Dashboard() {
 
         <main className="p-6">
           <div className="max-w-7xl mx-auto">
-            <div className="flex space-x-6 overflow-x-auto pb-6">
-              {projects?.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-              
-              <div className="flex-shrink-0 w-80">
-                <button
-                  onClick={() => setIsAddProjectOpen(true)}
-                  className="w-full h-32 border-2 border-dashed border-trello-border rounded-xl bg-white hover:bg-trello-light hover:border-trello-blue transition-colors flex flex-col items-center justify-center space-y-2 text-trello-muted hover:text-trello-blue"
+            <Droppable droppableId="project-board" direction="horizontal" type="PROJECT">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`flex space-x-6 overflow-x-auto pb-6 ${
+                    snapshot.isDraggingOver ? 'bg-blue-50 rounded-lg p-2' : ''
+                  }`}
                 >
-                  <Plus className="w-6 h-6" />
-                  <span className="text-sm font-medium">Add New Project</span>
-                </button>
-              </div>
-            </div>
+                  {projects?.map((project, index) => (
+                    <Draggable key={project.id} draggableId={project.id} index={index}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={`${snapshot.isDragging ? 'rotate-3 scale-105' : ''} transition-transform`}
+                        >
+                          <div {...provided.dragHandleProps}>
+                            <ProjectCard project={project} />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                  
+                  <div className="flex-shrink-0 w-80">
+                    <button
+                      onClick={() => setIsAddProjectOpen(true)}
+                      className="w-full h-32 border-2 border-dashed border-trello-border rounded-xl bg-white hover:bg-trello-light hover:border-trello-blue transition-colors flex flex-col items-center justify-center space-y-2 text-trello-muted hover:text-trello-blue"
+                    >
+                      <Plus className="w-6 h-6" />
+                      <span className="text-sm font-medium">Add New Project</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </Droppable>
 
             {projects?.length === 0 && (
               <div className="text-center py-12">
