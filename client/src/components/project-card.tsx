@@ -8,8 +8,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar, MoreHorizontal, Plus, Trash2, Copy } from "lucide-react";
-import type { ProjectWithMilestones } from "@shared/schema";
+import type { ProjectWithMilestones, Status } from "@shared/schema";
 import { MilestoneColumn } from "./milestone-column";
+import { StatusBadge } from "./status-badge";
 import { useState } from "react";
 import { useCreateMilestone, useUpdateProject, useDeleteProject, useCreateProject, useCreateTask } from "@/hooks/use-projects";
 import { Droppable, Draggable } from "react-beautiful-dnd";
@@ -35,10 +36,19 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   const totalTasks = project.milestones.reduce((sum, milestone) => sum + milestone.tasks.length, 0);
   const completedTasks = project.milestones.reduce(
-    (sum, milestone) => sum + milestone.tasks.filter(task => task.completed).length,
+    (sum, milestone) => sum + milestone.tasks.filter(task => task.status === 'Complete').length,
     0
   );
   const progressPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+  // Status summary counts
+  const statusCounts = project.milestones.reduce((counts, milestone) => {
+    milestone.tasks.forEach(task => {
+      const status = task.status as Status;
+      counts[status] = (counts[status] || 0) + 1;
+    });
+    return counts;
+  }, {} as Record<Status, number>);
 
   const handleAddMilestone = async () => {
     if (newMilestoneName.trim()) {
@@ -90,7 +100,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             await createTaskMutation.mutateAsync({
               milestoneId: newMilestone.id,
               name: task.name,
-              completed: false, // Reset completion status for new project
+              status: "Not Started", // Reset status for new project
               dueDate: task.dueDate,
               order: task.order,
             });
@@ -247,6 +257,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        
+        {/* Status Summary */}
+        {totalTasks > 0 && (
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            {Object.entries(statusCounts).map(([status, count]) => (
+              <div key={status} className="flex items-center gap-1">
+                <StatusBadge status={status as Status} size="sm" />
+                <span className="text-xs text-zen-soft font-medium">{count}</span>
+              </div>
+            ))}
+          </div>
+        )}
         
         {project.dueDate ? (
           <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
