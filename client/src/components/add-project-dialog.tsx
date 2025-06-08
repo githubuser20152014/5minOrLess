@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
@@ -22,6 +23,7 @@ interface AddProjectDialogProps {
 
 export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) {
   const [name, setName] = useState("");
+  const [details, setDetails] = useState("");
   const [dueDate, setDueDate] = useState<Date | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -45,11 +47,13 @@ export function AddProjectDialog({ open, onOpenChange }: AddProjectDialogProps) 
     try {
       await createProjectMutation.mutateAsync({
         name: name.trim(),
+        details: details.trim() || undefined,
         dueDate: dueDate?.toISOString().split('T')[0],
       });
       
       // Reset form
       setName("");
+      setDetails("");
       setDueDate(undefined);
       onOpenChange(false);
       

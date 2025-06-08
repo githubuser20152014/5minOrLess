@@ -256,10 +256,11 @@ export class MemStorage implements IStorage {
   async createProject(insertProject: InsertProject): Promise<Project> {
     const id = this.generateId();
     const project: Project = {
-      ...insertProject,
       id,
-      dueDate: insertProject.dueDate || null,
-      order: insertProject.order || 0,
+      name: insertProject.name,
+      details: insertProject.details ?? null,
+      dueDate: insertProject.dueDate ?? null,
+      order: insertProject.order ?? 0,
       createdAt: new Date(),
     };
     this.projects.set(id, project);
@@ -304,10 +305,12 @@ export class MemStorage implements IStorage {
   async createMilestone(insertMilestone: InsertMilestone): Promise<Milestone> {
     const id = this.generateId();
     const milestone: Milestone = {
-      ...insertMilestone,
       id,
-      dueDate: insertMilestone.dueDate || null,
-      order: insertMilestone.order || 0,
+      projectId: insertMilestone.projectId,
+      name: insertMilestone.name,
+      details: insertMilestone.details ?? null,
+      dueDate: insertMilestone.dueDate ?? null,
+      order: insertMilestone.order ?? 0,
       createdAt: new Date(),
     };
     this.milestones.set(id, milestone);
@@ -341,11 +344,13 @@ export class MemStorage implements IStorage {
   async createTask(insertTask: InsertTask): Promise<Task> {
     const id = this.generateId();
     const task: Task = {
-      ...insertTask,
       id,
-      dueDate: insertTask.dueDate || null,
-      order: insertTask.order || 0,
-      completed: insertTask.completed || false,
+      milestoneId: insertTask.milestoneId,
+      name: insertTask.name,
+      details: insertTask.details ?? null,
+      completed: insertTask.completed ?? false,
+      dueDate: insertTask.dueDate ?? null,
+      order: insertTask.order ?? 0,
       createdAt: new Date(),
     };
     this.tasks.set(id, task);
