@@ -81,18 +81,13 @@ export function TaskItem({ task, index }: TaskItemProps) {
           }`}
         >
           <div className="flex items-start space-x-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleToggleComplete}
-              className={`mt-0.5 w-5 h-5 border-2 rounded-lg hover:border-zen-accent transition-zen ${
-                task.completed 
-                  ? 'bg-zen-accent border-zen-accent' 
-                  : 'border-zen-stone'
-              }`}
-            >
-              {task.completed && <Check className="w-3 h-3 text-white" />}
-            </Button>
+            <div className="mt-1">
+              <StatusSelector 
+                value={task.status as Status}
+                onValueChange={handleStatusChange}
+                disabled={updateTaskMutation.isPending}
+              />
+            </div>
             
             <div className="flex-1">
               {isEditingName ? (
@@ -115,7 +110,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
               ) : (
                 <p 
                   className={`text-sm cursor-pointer transition-zen ${
-                    task.completed 
+                    task.status === 'Complete'
                       ? 'text-zen-soft line-through' 
                       : 'text-zen hover:text-zen-sage'
                   }`}

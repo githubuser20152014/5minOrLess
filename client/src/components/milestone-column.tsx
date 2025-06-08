@@ -4,8 +4,9 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Plus, Calendar, MoreHorizontal, Trash2, ChevronDown, ChevronRight } from "lucide-react";
-import type { MilestoneWithTasks } from "@shared/schema";
+import type { MilestoneWithTasks, Status } from "@shared/schema";
 import { TaskItem } from "./task-item";
+import { StatusSelector } from "./status-selector";
 import { useState } from "react";
 import { useCreateTask, useUpdateMilestone, useDeleteMilestone } from "@/hooks/use-projects";
 import { Droppable } from "react-beautiful-dnd";
@@ -25,6 +26,13 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   const createTaskMutation = useCreateTask();
   const updateMilestoneMutation = useUpdateMilestone();
   const deleteMilestoneMutation = useDeleteMilestone();
+
+  const handleStatusChange = (status: Status) => {
+    updateMilestoneMutation.mutate({
+      id: milestone.id,
+      status,
+    });
+  };
 
   const handleAddTask = async () => {
     if (newTaskName.trim()) {
@@ -122,6 +130,11 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
               {milestone.name}
             </h3>
           )}
+          <StatusSelector 
+            value={milestone.status as Status}
+            onValueChange={handleStatusChange}
+            disabled={updateMilestoneMutation.isPending}
+          />
           {milestone.tasks.length > 0 && (
             <span className="text-xs bg-zen-accent-soft text-zen px-3 py-1 rounded-full font-medium">
               {milestone.tasks.length}
