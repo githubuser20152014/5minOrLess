@@ -5,6 +5,7 @@ import { z } from "zod";
 export const projects = pgTable("projects", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  details: text("details"),
   dueDate: text("due_date"),
   order: integer("order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -14,6 +15,7 @@ export const milestones = pgTable("milestones", {
   id: text("id").primaryKey(),
   projectId: text("project_id").notNull(),
   name: text("name").notNull(),
+  details: text("details"),
   dueDate: text("due_date"),
   order: integer("order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -23,6 +25,7 @@ export const tasks = pgTable("tasks", {
   id: text("id").primaryKey(),
   milestoneId: text("milestone_id").notNull(),
   name: text("name").notNull(),
+  details: text("details"),
   completed: boolean("completed").notNull().default(false),
   dueDate: text("due_date"),
   order: integer("order").notNull().default(0),
