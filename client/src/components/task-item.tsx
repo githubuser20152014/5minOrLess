@@ -41,6 +41,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
   };
 
   const handleDateSelect = (date: Date | undefined) => {
+    console.log('Date clicked:', date?.toISOString(), 'Local date:', date?.toDateString());
     let formattedDate = null;
     if (date) {
       // Format the selected date as YYYY-MM-DD in local timezone
@@ -48,6 +49,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       formattedDate = `${year}-${month}-${day}`;
+      console.log('Formatted:', formattedDate);
     }
     updateTaskMutation.mutate({
       id: task.id,
@@ -134,19 +136,32 @@ export function TaskItem({ task, index }: TaskItemProps) {
                       </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={task.dueDate ? new Date(task.dueDate + 'T12:00:00') : undefined}
-                        onSelect={handleDateSelect}
-                        initialFocus
-                        defaultMonth={new Date()}
-                      />
-                      <div className="p-3 border-t">
+                      <div className="p-3">
+                        <input
+                          type="date"
+                          value={task.dueDate || ''}
+                          onChange={(e) => {
+                            const value = e.target.value || null;
+                            console.log('Date input changed to:', value);
+                            updateTaskMutation.mutate({
+                              id: task.id,
+                              dueDate: value,
+                            });
+                            setIsDatePickerOpen(false);
+                          }}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDateSelect(undefined)}
-                          className="w-full text-xs text-trello-muted hover:text-trello-dark"
+                          onClick={() => {
+                            updateTaskMutation.mutate({
+                              id: task.id,
+                              dueDate: null,
+                            });
+                            setIsDatePickerOpen(false);
+                          }}
+                          className="w-full text-xs text-trello-muted hover:text-trello-dark mt-2"
                         >
                           Remove due date
                         </Button>
