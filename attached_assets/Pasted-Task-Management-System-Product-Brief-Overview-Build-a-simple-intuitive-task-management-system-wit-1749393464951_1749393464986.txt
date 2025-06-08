@@ -1,0 +1,155 @@
+Task Management System - Product Brief
+Overview
+Build a simple, intuitive task management system with visual project organization and drag-and-drop functionality. The system should be minimal, elegant, and frictionless for daily task management.
+Core Structure
+The application follows a strict 2-level hierarchy:
+Project (Card)
+├── Milestone 1
+│   ├── Task A
+│   ├── Task B
+│   └── Task C
+├── Milestone 2
+│   ├── Task D
+│   └── Task E
+└── Milestone 3
+    └── Task F
+Key Features
+Project Cards
+
+Each project displays as a Trello-style card
+Clean, minimal card design with project title
+Cards should be visually distinct and organized
+Optional due dates displayed prominently on project cards
+
+Milestone System
+
+Milestones act as major checkpoints within each project
+Displayed as columns or sections under each project card
+Clear visual separation between milestones
+Optional due dates for milestones with subtle visual indicators
+
+Task Management
+
+Tasks are the smallest unit (no subtasks allowed)
+Tasks belong to specific milestones within projects
+Simple task creation with minimal required information
+Optional due dates for tasks with visual indicators
+
+Drag & Drop Functionality
+Priority Requirements:
+
+Drag tasks between milestones within the same project
+Reorder tasks within a milestone (up/down)
+Smooth, responsive drag interactions
+Visual feedback during drag operations
+
+User Experience Requirements
+Visual Design
+
+Clean, minimal interface
+Generous whitespace
+Consistent spacing and typography
+Subtle shadows/borders for card definition
+Intuitive iconography
+
+Interaction Design
+
+One-click task creation
+Inline editing for task names
+Hover states for interactive elements
+Clear visual hierarchy (Project > Milestone > Task)
+
+Performance
+
+Instant visual feedback for all interactions
+Smooth animations for drag/drop
+Fast loading and rendering
+
+Technical Considerations
+Core Technologies
+
+Modern web framework (React recommended)
+Drag-and-drop library (react-beautiful-dnd or similar)
+Local storage for data persistence initially
+Responsive design for desktop/tablet use
+
+Data Structure
+javascript{
+  projects: [
+    {
+      id: "project-1",
+      name: "Project Name",
+      dueDate: "2024-12-31", // Optional
+      milestones: [
+        {
+          id: "milestone-1",
+          name: "Milestone Name",
+          dueDate: "2024-12-15", // Optional
+          tasks: [
+            {
+              id: "task-1",
+              name: "Task Name",
+              dueDate: "2024-12-10", // Optional
+              completed: false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+Success Metrics
+
+Time to create a new task: < 5 seconds
+Time to reorganize tasks: < 10 seconds
+Zero learning curve for basic operations
+Frictionless daily usage
+
+Out of Scope (Keep Simple)
+
+Complex task dependencies
+Team collaboration features
+Time tracking
+File attachments
+Task priorities/labels
+More than 2 levels of hierarchy
+
+Development Timeline
+Target: Complete functional prototype within 1-2 development sessions
+Priority Order
+
+Basic project/milestone/task structure
+Task creation and editing
+Drag-and-drop between milestones
+Task reordering within milestones
+Visual polish and animations
+Data persistence
+
+Key User Flows
+Creating a Task
+
+Click "+" or "Add Task" in desired milestone
+Type task name inline
+Press Enter to save
+
+Moving Tasks
+
+Click and drag task
+Visual indicators show valid drop zones
+Drop in new milestone or position
+Immediate visual update
+
+Setting Due Dates
+
+Click date icon or "Add Due Date" on project/milestone/task
+Quick date picker appears
+Select date or clear existing date
+Visual indicator updates immediately
+
+Project Organization
+
+Projects displayed as distinct cards
+Milestones visible as columns/sections within cards
+Tasks listed clearly under appropriate milestones
+
+The end result should feel like a digital whiteboard that's as intuitive as moving sticky notes around, but with the structure needed for proper project management.
