@@ -4,10 +4,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Check, Calendar, GripVertical, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
-import type { Task } from "@shared/schema";
+import { Calendar, GripVertical, MoreHorizontal, Trash2 } from "lucide-react";
+import type { Task, Status } from "@shared/schema";
 import { useUpdateTask, useDeleteTask } from "@/hooks/use-projects";
 import { Draggable } from "react-beautiful-dnd";
+import { StatusSelector } from "./status-selector";
 import { format } from "date-fns";
 
 interface TaskItemProps {
@@ -22,10 +23,10 @@ export function TaskItem({ task, index }: TaskItemProps) {
   const updateTaskMutation = useUpdateTask();
   const deleteTaskMutation = useDeleteTask();
 
-  const handleToggleComplete = () => {
+  const handleStatusChange = (status: Status) => {
     updateTaskMutation.mutate({
       id: task.id,
-      completed: !task.completed,
+      status,
     });
   };
 
