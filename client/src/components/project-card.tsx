@@ -44,9 +44,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
   };
 
   const handleProjectDateSelect = (date: Date | undefined) => {
+    let formattedDate = null;
+    if (date) {
+      // Convert to EST and format as YYYY-MM-DD
+      const estDate = new Date(date.toLocaleString("en-US", {timeZone: "America/New_York"}));
+      formattedDate = estDate.toISOString().split('T')[0];
+    }
     updateProjectMutation.mutate({
       id: project.id,
-      dueDate: date?.toISOString().split('T')[0] || null,
+      dueDate: formattedDate,
     });
     setIsDatePickerOpen(false);
   };
@@ -54,9 +60,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const getDueDateColor = (dueDate?: string) => {
     if (!dueDate) return "";
     
-    const now = new Date();
-    const due = new Date(dueDate);
-    const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    // Get current EST time
+    const nowEST = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}));
+    const due = new Date(dueDate + "T00:00:00");
+    const diffDays = Math.ceil((due.getTime() - nowEST.getTime()) / (1000 * 60 * 60 * 24));
     
     if (diffDays < 0) return "bg-red-100 text-red-700";
     if (diffDays <= 3) return "bg-yellow-100 text-yellow-700";
