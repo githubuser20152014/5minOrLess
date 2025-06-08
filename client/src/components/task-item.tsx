@@ -41,7 +41,6 @@ export function TaskItem({ task, index }: TaskItemProps) {
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    console.log('Date clicked:', date?.toISOString(), 'Local date:', date?.toDateString());
     let formattedDate = null;
     if (date) {
       // Format the selected date as YYYY-MM-DD in local timezone
@@ -49,7 +48,6 @@ export function TaskItem({ task, index }: TaskItemProps) {
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       formattedDate = `${year}-${month}-${day}`;
-      console.log('Formatted:', formattedDate);
     }
     updateTaskMutation.mutate({
       id: task.id,
@@ -132,7 +130,7 @@ export function TaskItem({ task, index }: TaskItemProps) {
                     <PopoverTrigger asChild>
                       <button className={`flex items-center text-xs hover:bg-gray-100 rounded px-1 py-0.5 ${getDueDateColor(task.dueDate)}`}>
                         <Calendar className="w-3 h-3 mr-1" />
-                        <span>{new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                        <span>{new Date(task.dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                       </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -150,6 +148,8 @@ export function TaskItem({ task, index }: TaskItemProps) {
                             setIsDatePickerOpen(false);
                           }}
                           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          min="2020-01-01"
+                          max="2030-12-31"
                         />
                         <Button
                           variant="ghost"

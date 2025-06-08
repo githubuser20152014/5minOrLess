@@ -78,22 +78,37 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
             <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
               <PopoverTrigger asChild>
                 <button className={`text-xs px-2 py-1 rounded hover:bg-gray-100 ${getDueDateColor(milestone.dueDate)}`}>
-                  Due: {new Date(milestone.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  Due: {new Date(milestone.dueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <CalendarComponent
-                  mode="single"
-                  selected={milestone.dueDate ? new Date(milestone.dueDate + 'T00:00:00') : undefined}
-                  onSelect={handleDateSelect}
-                  initialFocus
-                />
-                <div className="p-3 border-t">
+                <div className="p-3">
+                  <input
+                    type="date"
+                    value={milestone.dueDate || ''}
+                    onChange={(e) => {
+                      const value = e.target.value || null;
+                      updateMilestoneMutation.mutate({
+                        id: milestone.id,
+                        dueDate: value,
+                      });
+                      setIsDatePickerOpen(false);
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    min="2020-01-01"
+                    max="2030-12-31"
+                  />
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDateSelect(undefined)}
-                    className="w-full text-xs text-trello-muted hover:text-trello-dark"
+                    onClick={() => {
+                      updateMilestoneMutation.mutate({
+                        id: milestone.id,
+                        dueDate: null,
+                      });
+                      setIsDatePickerOpen(false);
+                    }}
+                    className="w-full text-xs text-trello-muted hover:text-trello-dark mt-2"
                   >
                     Remove due date
                   </Button>
