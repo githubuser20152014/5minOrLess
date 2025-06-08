@@ -55,6 +55,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/projects/reorder", async (req, res) => {
+    try {
+      const { projectIds } = req.body;
+      if (!Array.isArray(projectIds)) {
+        return res.status(400).json({ error: "projectIds must be an array" });
+      }
+      await storage.reorderProjects(projectIds);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to reorder projects" });
+    }
+  });
+
   // Milestones
   app.post("/api/milestones", async (req, res) => {
     try {

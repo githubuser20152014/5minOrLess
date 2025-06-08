@@ -223,7 +223,7 @@ export class MemStorage implements IStorage {
       });
     }
 
-    return result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    return result.sort((a, b) => a.order - b.order);
   }
 
   async getProject(id: string): Promise<ProjectWithMilestones | undefined> {

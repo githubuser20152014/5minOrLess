@@ -144,6 +144,19 @@ export function useReorderTasks() {
   });
 }
 
+export function useReorderProjects() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (projectIds: string[]) => {
+      await apiRequest("POST", "/api/projects/reorder", { projectIds });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+    },
+  });
+}
+
 export function useMoveTask() {
   const queryClient = useQueryClient();
   

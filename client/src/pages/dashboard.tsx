@@ -5,16 +5,17 @@ import { useProjects } from "@/hooks/use-projects";
 import { ProjectCard } from "@/components/project-card";
 import { AddProjectDialog } from "@/components/add-project-dialog";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "react-beautiful-dnd";
-import { useMoveTask, useReorderTasks } from "@/hooks/use-projects";
+import { useMoveTask, useReorderTasks, useReorderProjects } from "@/hooks/use-projects";
 
 export default function Dashboard() {
   const { data: projects, isLoading } = useProjects();
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
   const moveTaskMutation = useMoveTask();
   const reorderTasksMutation = useReorderTasks();
+  const reorderProjectsMutation = useReorderProjects();
 
   const handleDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
+    const { destination, source, draggableId, type } = result;
 
     if (!destination) return;
 
@@ -26,7 +27,19 @@ export default function Dashboard() {
       return;
     }
 
-    // Find the source and destination milestones
+    // Handle project reordering
+    if (type === "PROJECT") {
+      if (!projects) return;
+      
+      const reorderedProjects = Array.from(projects);
+      const [removed] = reorderedProjects.splice(source.index, 1);
+      reorderedProjects.splice(destination.index, 0, removed);
+      
+      reorderProjectsMutation.mutate(reorderedProjects.map(project => project.id));
+      return;
+    }
+
+    // Handle task reordering within milestones
     const sourceMilestoneId = source.droppableId;
     const destinationMilestoneId = destination.droppableId;
 
