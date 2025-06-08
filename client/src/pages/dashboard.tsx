@@ -72,22 +72,22 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-trello-bg">
-        <header className="bg-white shadow-sm border-b border-trello-border">
-          <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="min-h-screen">
+        <header className="glass-zen shadow-zen-soft border-b border-zen-stone">
+          <div className="max-w-7xl mx-auto px-8 py-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-trello-blue rounded-lg flex items-center justify-center">
-                  <ListTodo className="text-white w-4 h-4" />
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-zen-accent-soft rounded-xl flex items-center justify-center transition-zen">
+                  <ListTodo className="text-zen w-5 h-5" />
                 </div>
-                <h1 className="text-xl font-semibold text-trello-dark">5 mins or less</h1>
+                <h1 className="text-2xl font-light text-zen tracking-wide">5 mins or less</h1>
               </div>
             </div>
           </div>
         </header>
-        <main className="p-6">
+        <main className="p-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center text-trello-muted">Loading projects...</div>
+            <div className="text-center text-zen-soft">Loading your peaceful workspace...</div>
           </div>
         </main>
       </div>
@@ -96,20 +96,20 @@ export default function Dashboard() {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="min-h-screen bg-trello-bg">
-        <header className="bg-white shadow-sm border-b border-trello-border">
-          <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="min-h-screen">
+        <header className="glass-zen shadow-zen-soft border-b border-zen-stone">
+          <div className="max-w-7xl mx-auto px-8 py-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-trello-blue rounded-lg flex items-center justify-center">
-                  <ListTodo className="text-white w-4 h-4" />
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-zen-accent-soft rounded-xl flex items-center justify-center transition-zen hover:bg-zen-accent">
+                  <ListTodo className="text-zen w-5 h-5" />
                 </div>
-                <h1 className="text-xl font-semibold text-trello-dark">5 mins or less</h1>
+                <h1 className="text-2xl font-light text-zen tracking-wide">5 mins or less</h1>
               </div>
               <div className="flex items-center space-x-4">
                 <Button
                   onClick={() => setIsAddProjectOpen(true)}
-                  className="bg-trello-blue hover:bg-blue-700 text-white"
+                  className="bg-zen-accent-soft hover:bg-zen-accent text-zen shadow-zen transition-zen border-0 px-6 py-2"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   New Project

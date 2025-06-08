@@ -78,14 +78,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <Card className="flex-shrink-0 w-80 bg-white shadow-trello">
+    <Card className="flex-shrink-0 w-80 glass-zen shadow-zen transition-zen hover:shadow-zen-hover border-0">
       {/* Project Header */}
-      <div className="p-4 border-b border-trello-border">
-        <div className="flex items-start justify-between mb-2">
-          <h2 className="text-lg font-semibold text-trello-dark">{project.name}</h2>
+      <div className="p-6 border-b border-zen-stone">
+        <div className="flex items-start justify-between mb-3">
+          <h2 className="text-xl font-light text-zen tracking-wide">{project.name}</h2>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-trello-muted hover:text-trello-dark">
+              <Button variant="ghost" size="icon" className="text-zen-soft hover:text-zen transition-zen">
                 <MoreHorizontal className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>

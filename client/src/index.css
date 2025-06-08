@@ -24,15 +24,20 @@
   --ring: hsl(200, 87%, 42%);
   --radius: 0.75rem;
   
-  /* Custom TaskFlow colors */
-  --trello-blue: hsl(200, 87%, 42%);
-  --trello-light: hsl(210, 40%, 97%);
-  --trello-success: hsl(104, 43%, 47%);
-  --trello-danger: hsl(7, 71%, 58%);
-  --trello-dark: hsl(218, 54%, 19%);
-  --trello-muted: hsl(217, 19%, 48%);
-  --trello-border: hsl(216, 13%, 87%);
-  --trello-bg: hsl(214, 31%, 99%);
+  /* Calm, serene color palette */
+  --zen-sage: hsl(140, 25%, 85%);
+  --zen-sage-light: hsl(140, 30%, 95%);
+  --zen-sage-dark: hsl(140, 30%, 40%);
+  --zen-lavender: hsl(240, 20%, 88%);
+  --zen-lavender-light: hsl(240, 25%, 96%);
+  --zen-stone: hsl(210, 15%, 65%);
+  --zen-stone-light: hsl(210, 20%, 92%);
+  --zen-mist: hsl(200, 25%, 95%);
+  --zen-warm: hsl(30, 35%, 92%);
+  --zen-text: hsl(210, 25%, 25%);
+  --zen-text-soft: hsl(210, 15%, 55%);
+  --zen-accent: hsl(180, 35%, 70%);
+  --zen-accent-soft: hsl(180, 45%, 85%);
 }
 
 .dark {
@@ -64,57 +69,80 @@
 
   body {
     @apply font-sans antialiased;
-    background-color: var(--trello-bg);
-    color: var(--trello-dark);
+    background: linear-gradient(135deg, var(--zen-mist) 0%, var(--zen-warm) 100%);
+    color: var(--zen-text);
+    min-height: 100vh;
   }
 }
 
 @layer utilities {
-  .text-trello-blue {
-    color: var(--trello-blue);
+  /* Zen color utilities */
+  .text-zen {
+    color: var(--zen-text);
   }
   
-  .text-trello-success {
-    color: var(--trello-success);
+  .text-zen-soft {
+    color: var(--zen-text-soft);
   }
   
-  .text-trello-danger {
-    color: var(--trello-danger);
+  .text-zen-sage {
+    color: var(--zen-sage-dark);
   }
   
-  .text-trello-dark {
-    color: var(--trello-dark);
+  .bg-zen-sage {
+    background-color: var(--zen-sage);
   }
   
-  .text-trello-muted {
-    color: var(--trello-muted);
+  .bg-zen-sage-light {
+    background-color: var(--zen-sage-light);
   }
   
-  .bg-trello-blue {
-    background-color: var(--trello-blue);
+  .bg-zen-lavender {
+    background-color: var(--zen-lavender);
   }
   
-  .bg-trello-light {
-    background-color: var(--trello-light);
+  .bg-zen-lavender-light {
+    background-color: var(--zen-lavender-light);
   }
   
-  .bg-trello-success {
-    background-color: var(--trello-success);
+  .bg-zen-stone-light {
+    background-color: var(--zen-stone-light);
   }
   
-  .bg-trello-bg {
-    background-color: var(--trello-bg);
+  .bg-zen-warm {
+    background-color: var(--zen-warm);
   }
   
-  .border-trello-border {
-    border-color: var(--trello-border);
+  .bg-zen-accent-soft {
+    background-color: var(--zen-accent-soft);
   }
   
-  .shadow-trello {
-    box-shadow: 0 1px 3px rgba(9, 30, 66, 0.25);
+  .border-zen-stone {
+    border-color: var(--zen-stone);
   }
   
-  .shadow-trello-hover {
-    box-shadow: 0 4px 8px rgba(9, 30, 66, 0.25);
+  /* Calm shadows and effects */
+  .shadow-zen {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-zen-hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .shadow-zen-soft {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Smooth transitions */
+  .transition-zen {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Glass morphism effect */
+  .glass-zen {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 }
