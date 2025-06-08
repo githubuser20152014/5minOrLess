@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(240, 10%, 3.9%);
+  --muted: hsl(210, 40%, 98%);
+  --muted-foreground: hsl(215, 16%, 47%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 10%, 3.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 10%, 3.9%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --primary: hsl(200, 87%, 42%);
+  --primary-foreground: hsl(220, 91%, 99%);
+  --secondary: hsl(210, 40%, 98%);
+  --secondary-foreground: hsl(222, 84%, 4.9%);
+  --accent: hsl(210, 40%, 98%);
+  --accent-foreground: hsl(222, 84%, 4.9%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(200, 87%, 42%);
+  --radius: 0.75rem;
+  
+  /* Custom TaskFlow colors */
+  --trello-blue: hsl(200, 87%, 42%);
+  --trello-light: hsl(210, 40%, 97%);
+  --trello-success: hsl(104, 43%, 47%);
+  --trello-danger: hsl(7, 71%, 58%);
+  --trello-dark: hsl(218, 54%, 19%);
+  --trello-muted: hsl(217, 19%, 48%);
+  --trello-border: hsl(216, 13%, 87%);
+  --trello-bg: hsl(214, 31%, 99%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(200, 87%, 42%);
+  --primary-foreground: hsl(220, 91%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background-color: var(--trello-bg);
+    color: var(--trello-dark);
+  }
+}
+
+@layer utilities {
+  .text-trello-blue {
+    color: var(--trello-blue);
+  }
+  
+  .text-trello-success {
+    color: var(--trello-success);
+  }
+  
+  .text-trello-danger {
+    color: var(--trello-danger);
+  }
+  
+  .text-trello-dark {
+    color: var(--trello-dark);
+  }
+  
+  .text-trello-muted {
+    color: var(--trello-muted);
+  }
+  
+  .bg-trello-blue {
+    background-color: var(--trello-blue);
+  }
+  
+  .bg-trello-light {
+    background-color: var(--trello-light);
+  }
+  
+  .bg-trello-success {
+    background-color: var(--trello-success);
+  }
+  
+  .bg-trello-bg {
+    background-color: var(--trello-bg);
+  }
+  
+  .border-trello-border {
+    border-color: var(--trello-border);
+  }
+  
+  .shadow-trello {
+    box-shadow: 0 1px 3px rgba(9, 30, 66, 0.25);
+  }
+  
+  .shadow-trello-hover {
+    box-shadow: 0 4px 8px rgba(9, 30, 66, 0.25);
+  }
+}
