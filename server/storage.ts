@@ -243,6 +243,7 @@ export class MemStorage implements IStorage {
       ...insertProject,
       id,
       dueDate: insertProject.dueDate || null,
+      order: insertProject.order || 0,
       createdAt: new Date(),
     };
     this.projects.set(id, project);
