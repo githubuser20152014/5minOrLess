@@ -42,9 +42,11 @@ export function MilestoneColumn({ milestone }: MilestoneColumnProps) {
   const handleDateSelect = (date: Date | undefined) => {
     let formattedDate = null;
     if (date) {
-      // Convert to EST and format as YYYY-MM-DD
-      const estDate = new Date(date.toLocaleString("en-US", {timeZone: "America/New_York"}));
-      formattedDate = estDate.toISOString().split('T')[0];
+      // Format the selected date as YYYY-MM-DD in local timezone
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      formattedDate = `${year}-${month}-${day}`;
     }
     updateMilestoneMutation.mutate({
       id: milestone.id,
