@@ -130,7 +130,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <PopoverContent className="w-auto p-0" align="start">
               <CalendarComponent
                 mode="single"
-                selected={project.dueDate ? new Date(project.dueDate) : undefined}
+                selected={project.dueDate ? new Date(project.dueDate + 'T00:00:00') : undefined}
                 onSelect={handleProjectDateSelect}
                 initialFocus
               />
